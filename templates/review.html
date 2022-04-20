@@ -47,7 +47,9 @@
                     {% endif %}
                         <h4 class="tot_likes">{{review.likes}}</h4>
                     </div>
-                    <button class="button">Contribute</button>
+                    <input type="number" class="input_field contrib_field" min="0" id="{{review.r_id}}"/>
+                    <button class="button" onclick="add_contribution(this);event.stopPropagation();">Contribute</button>
+                    <h5 id="contributed_amount">${{review.contribtuion}}</h5>
                 </section>
 
                 <section class="post_footer">
@@ -56,4 +58,37 @@
                     </p>
                 </section>
             </div>
+
+<script>
+    function add_contribution(e){
+        const review_id = e.parentNode.querySelector('.contrib_field').id;
+        val = e.parentNode.querySelector('.contrib_field').value;
+        console.log(val+" "+review_id);
+
+
+        var myHeaders = new Headers();
+
+        var formdata = new FormData();
+        formdata.append("review_id", review_id);
+        formdata.append("amount",val);
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow'
+        };
+
+        fetch("http://127.0.0.1:8000/api/contribution/", requestOptions)
+        .then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            console.log(data);
+            var l = e.parentNode.querySelector("#contributed_amount");
+            l.innerHTML = "$" + data["amount"];
+            // update like of other elements too
+        })
+    }
+</script>
+
             

@@ -119,6 +119,7 @@ class Review(models.Model):
     r_id = models.BigAutoField(primary_key=True)
     content =  models.TextField(max_length=1500)
     likes = models.IntegerField(default=0)
+    contribution = models.IntegerField(default=0)
     date_uploaded = models.DateField(default=timezone.now)
 
 class Review_pic(models.Model):

@@ -11,5 +11,6 @@ urlpatterns = [
     path('review', views.review),
     path('like/<r_id>',views.like),
     path('search',views.search),
+    path('contribution/',views.contribution),
     path('logout', views.logout),
 ]

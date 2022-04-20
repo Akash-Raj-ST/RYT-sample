@@ -107,7 +107,8 @@ def get_review_data(user_rev_objs,login_user,liked_rev=False):
             "likes": user_rev_obj.likes,
             "date":user_rev_obj.date_uploaded,
             "liked":liked,
-            "p_id":user_rev_obj.p_id.p_id
+            "p_id":user_rev_obj.p_id.p_id,
+            "contribtuion":user_rev_obj.contribution
         }
         rev_data.append(rev)
     rev_data.sort(key= lambda x:x["likes"],reverse=True)
@@ -497,3 +498,26 @@ def logout(request):
         msg = "Token not found"
 
     return Response(msg, status=status.HTTP_202_ACCEPTED)
+
+
+@api_view(["POST"])
+def contribution(request):
+    print(request.data)
+    # if "review_id" or "amount" not in request.data:
+    #     return Response({"review_id amount needed"}, status=status.HTTP_400_BAD_REQUEST)
+
+    amount = request.data["amount"]
+    review_id = request.data["review_id"]
+
+
+    if Review.objects.filter(r_id=review_id).exists():
+        review_obj = Review.objects.get(r_id=review_id)
+        review_obj.contribution += int(amount)
+        review_obj.save()
+
+        data = {
+            "amount":review_obj.contribution
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response({"No such review"}, status=status.HTTP_400_BAD_REQUEST)
